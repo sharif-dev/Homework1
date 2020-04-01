@@ -23,16 +23,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class getCoordinate implements Runnable {
     String cityName = "";
     Context context ;
     Handler handler;
-    getCoordinate(String cityName,Context context,Handler handler){
+    Handler handler2;
+    ArrayList<double[]> contact;
+
+    getCoordinate(String cityName,Context context,ArrayList<double[]> contact,Handler handler,Handler coordinateHandler){
         this.cityName = cityName;
         this.context = context;
         this.handler = handler;
+        this.handler2 = coordinateHandler;
+        this.contact = contact;
 
     }
     @Override
@@ -62,23 +68,30 @@ public class getCoordinate implements Runnable {
                                 JSONArray contacts = jsonObj.getJSONArray("features");
                                 // looping through All Contacts
                                 String[]  cityNames = new String[contacts.length()];
-                                HashMap<String, double[]> contact = new HashMap<>();
-                                System.out.println(jsonObj);
+                                // ArrayList<double[]> contact = new ArrayList<>();
+
+                                //  HashMap<String, double[]> contact = new HashMap<>();
+
+                                System.out.println(response.toString());
+
                                 for (int i = 0; i < contacts.length(); i++) {
                                     JSONObject c = contacts.getJSONObject(i);
                                     cityNames[i] = c.getString("place_name");
                                     String placeName = c.getString("place_name");
                                     double latitude = c.getJSONArray("center").getDouble(0);
                                     double longitude = c.getJSONArray("center").getDouble(1);
-                                    System.out.println(latitude);
-                                    System.out.println(longitude);
-                                    double [] doubleAreay = {latitude,longitude};
-                                    contact.put(placeName, doubleAreay);
+                                    double [] doubleArray = {latitude,longitude};
+                                    // contact.put(placeName, doubleArray);
+                                    contact.add(doubleArray);
 
 
                                     Message message = new Message();
                                     message.obj = cityNames;
                                     handler.sendMessage(message);
+
+                                    Message message2 = new Message();
+                                    message2.obj = contact;
+                                    handler2.sendMessage(message2);
 
                                 }
                             } catch (final JSONException e) {Log.i("2",e.toString());

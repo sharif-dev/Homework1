@@ -1,5 +1,7 @@
 package com.example.project1;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,9 +18,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project1.R;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     public Handler handler;
+    public Handler coordinateHandler;
+    public Handler getWeather;
+
+    ArrayList<double[]> coordinates = new ArrayList<>();
+
     ListView listView;
+
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -27,46 +38,49 @@ public class MainActivity extends AppCompatActivity {
         Button btn = (Button) findViewById(R.id.searchBtn);
         final EditText cityName = (EditText) findViewById(R.id.cityNameTxt);
         listView = (ListView) findViewById(R.id.listview);
-//        final Thread getCoordinateThread = new Thread();
-//        String[] str = {"1 joje kabak","2 cholo morgh","3 kaskebademjoon"};
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,  android.R.layout.simple_list_item_1, str);
-//        listView.setAdapter(adapter);
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String cityNameStr = cityName.getText().toString();
-                new Thread(new getCoordinate(cityNameStr,MainActivity.this,handler)).start();
+                new Thread(new getCoordinate(cityNameStr, MainActivity.this, coordinates, handler, coordinateHandler)).start();
             }
 
         });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                // ListView Clicked item index
-                int itemPosition     = position;
-
-                // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
-
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                        .show();
-
-            }
-
-        });
-
-        handler = new Handler( ) {
+        handler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, (String[]) msg.obj);
                 listView.setAdapter(adapter);
+
+            }
+        };
+
+
+        coordinateHandler = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        new Thread(new getWeatherData(coordinates.get(position)[0], coordinates.get(position)[1], MainActivity.this, getWeather)).start();
+                    }
+                });
+            }
+        };
+
+        getWeather = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                System.out.println("here ");
+                Intent startIntent = new Intent(getApplicationContext(), Main2Activity.class);
+                startIntent.putExtra("weekWeather", (String[]) msg.obj);
+                startActivity(startIntent);
+
             }
         };
     }

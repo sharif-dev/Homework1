@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button btn = (Button) findViewById(R.id.searchBtn);
+
+
+
         final EditText cityName = (EditText) findViewById(R.id.cityNameTxt);
         listView = (ListView) findViewById(R.id.listview);
 
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         new Thread(new getWeatherData(coordinates.get(position)[0], coordinates.get(position)[1], MainActivity.this, getWeather)).start();
+
                     }
                 });
             }
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 System.out.println("here ");
                 Intent startIntent = new Intent(getApplicationContext(), Main2Activity.class);
-                startIntent.putExtra("weekWeather", (String[]) msg.obj);
+                startIntent.putExtra("weekWeather",(ArrayList) msg.obj);
                 startActivity(startIntent);
 
             }

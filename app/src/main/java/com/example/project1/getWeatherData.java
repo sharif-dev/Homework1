@@ -4,6 +4,7 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -63,26 +64,36 @@ public class getWeatherData  implements Runnable{
                             String[] precipType = new String[7];
                             String[] precipProbability = new String[7];
                             String[] discription = new String[7];
+                            if (jsonArray.length() == 0){
+                                Toast.makeText(context,"query not found !",Toast.LENGTH_LONG).show();
+                            }
                             for (int i = 0; i < 7 ; i++) {
                                 JSONObject c = jsonArray.getJSONObject(i);
                                 summery[i] = c.getString("summary");
                                 icon[i] = c.getString("icon");
-                                precipType[i] = c.getString("precipType");
                                 precipProbability[i] = c.getString("precipProbability");
+                                if(c.has("precipType")){
+                                    precipType[i] = c.getString("precipType");
+                                }
+                                else{
+                                    precipType[i] = "precipitation";
+                                }
+
+
                             }
                             Integer[] imgid=new Integer[7];
-                            String[] icons = {
-                                    "clear-day",
-                                    "clear-night",
-                                    "partly-cloudy-day",
-                                    "partly-cloudy-night",
-                                    "cloudy",
-                                    "rain",
-                                    "sleet",
-                                    "snow",
-                                    "wind",
-                                    "fog"
-                            };
+//                            String[] icons = {
+//                                    "clear-day",
+//                                    "clear-night",
+//                                    "partly-cloudy-day",
+//                                    "partly-cloudy-night",
+//                                    "cloudy",
+//                                    "rain",
+//                                    "sleet",
+//                                    "snow",
+//                                    "wind",
+//                                    "fog"
+//                            };
                             for(int i = 0 ; i <7 ; i ++){
                                 switch (icon[i]){
                                     case ("clear-day"):
@@ -118,7 +129,7 @@ public class getWeatherData  implements Runnable{
 
 
                                     default:
-                                        System.out.println("oooooooops icon not cosidered :" + icons[i]);
+                                        System.out.println("oooooooops icon not cosidered :" + icon[i]);
                                         imgid[i] = R.drawable.ic_launcher_background;
                                 }
                                 discription[i] = "probability of "+ precipType[i] + " is "+precipProbability[i];
@@ -137,13 +148,15 @@ public class getWeatherData  implements Runnable{
 
                         }
                         catch (JSONException E){
+                            Toast.makeText(context,"Couldn't get json from server." ,Toast.LENGTH_LONG).show();
                             E.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("No response");
+                Toast.makeText(context, error.getMessage(),Toast.LENGTH_LONG).show();
+//                System.out.println("No response");
             }
         });
         queue.add(jsonObjectRequest);

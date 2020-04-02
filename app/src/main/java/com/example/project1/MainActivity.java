@@ -32,11 +32,17 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = new Intent(this, Main2Activity.class);
+//        EditText editText = (EditText) findViewById(R.id.editText);
+//        String message = editText.getText().toString();
+        ArrayList massage = new ArrayList();
+//        intent.putExtra("past_data", message);
+        startActivity(intent);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button btn = (Button) findViewById(R.id.searchBtn);
-
+//        Toast.makeText(this,"hello ", Toast.LENGTH_LONG).show();
 
 
         final EditText cityName = (EditText) findViewById(R.id.cityNameTxt);

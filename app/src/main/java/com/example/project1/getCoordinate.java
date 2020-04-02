@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -53,7 +54,8 @@ public class getCoordinate implements Runnable {
         // Use HttpURLConnection as the HTTP client
         Network network = new BasicNetwork(new HurlStack());
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -74,6 +76,10 @@ public class getCoordinate implements Runnable {
 
                                 System.out.println(response.toString());
 
+
+                                if (contacts.length() == 0){
+                                    Toast.makeText(context,"query not found !",Toast.LENGTH_LONG).show();
+                                }
                                 for (int i = 0; i < contacts.length(); i++) {
                                     JSONObject c = contacts.getJSONObject(i);
                                     cityNames[i] = c.getString("place_name");
@@ -99,7 +105,7 @@ public class getCoordinate implements Runnable {
                             }
 
                         } else {
-                            System.out.println("Couldn't get json from server.");
+                            Toast.makeText(context,"Couldn't get json from server." ,Toast.LENGTH_LONG).show();
 
                         }
 
@@ -107,6 +113,8 @@ public class getCoordinate implements Runnable {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, error.getMessage(),Toast.LENGTH_LONG).show();
+
             }
         });
 

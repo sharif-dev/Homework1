@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public Handler coordinateHandler;
     public Handler getWeather;
     public Handler showLastData;
+    public Handler queryDone ;
 
     ArrayList<double[]> coordinates = new ArrayList<>();
 
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String cityNameStr = cityName.getText().toString();
-                new Thread(new getCoordinate(cityNameStr, MainActivity.this, coordinates, handler, coordinateHandler)).start();
+                new Thread(new getCoordinate(cityNameStr, MainActivity.this, coordinates, handler, coordinateHandler,queryDone)).start();
                 progressBar.setVisibility(View.VISIBLE);
             }
 
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        new Thread(new getWeatherData(coordinates.get(position)[0], coordinates.get(position)[1], MainActivity.this, getWeather)).start();
+                        new Thread(new getWeatherData(coordinates.get(position)[0], coordinates.get(position)[1], MainActivity.this, getWeather,queryDone)).start();
                         gifImageView.setVisibility(View.VISIBLE);
                         findViewById(R.id.rectimage).setVisibility(View.VISIBLE);
                     }
@@ -134,6 +135,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent startIntent = new Intent(getApplicationContext(), Main2Activity.class);
                 startIntent.putExtra("weekWeather",(ArrayList) msg.obj);
                 startActivity(startIntent);
+
+            }
+        };
+        queryDone = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                gifImageView.setVisibility(View.GONE);
+                findViewById(R.id.rectimage).setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
 
             }
         };

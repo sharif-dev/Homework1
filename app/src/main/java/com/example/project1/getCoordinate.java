@@ -32,9 +32,11 @@ public class getCoordinate implements Runnable {
     Context context ;
     Handler handler;
     Handler handler2;
+    Handler handler3;
     ArrayList<double[]> contact;
 
-    getCoordinate(String cityName,Context context,ArrayList<double[]> contact,Handler handler,Handler coordinateHandler){
+    getCoordinate(String cityName,Context context,ArrayList<double[]> contact,Handler handler,Handler coordinateHandler,Handler handler3){
+        this.handler3 = handler3;
         this.cityName = cityName;
         this.context = context;
         this.handler = handler;
@@ -77,6 +79,8 @@ public class getCoordinate implements Runnable {
 
                                 if (contacts.length() == 0){
                                     Toast.makeText(context,"query not found !",Toast.LENGTH_LONG).show();
+                                    Message message = new Message();
+                                    handler3.sendMessage(message);
                                 }
                                 for (int i = 0; i < contacts.length(); i++) {
                                     JSONObject c = contacts.getJSONObject(i);
@@ -104,6 +108,8 @@ public class getCoordinate implements Runnable {
 
                         } else {
                             Toast.makeText(context,"Couldn't get json from server." ,Toast.LENGTH_LONG).show();
+                            Message message = new Message();
+                            handler3.sendMessage(message);
 
                         }
 
@@ -112,7 +118,8 @@ public class getCoordinate implements Runnable {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "cannot find information !\ncheck your connection:)",Toast.LENGTH_LONG).show();
-                
+                Message message = new Message();
+                handler3.sendMessage(message);
             }
         });
 

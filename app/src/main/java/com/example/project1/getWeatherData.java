@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,12 +30,14 @@ public class getWeatherData  implements Runnable{
     double latitude;
     double longitude;
     Handler handler;
+    Handler handler3;
     Context context ;
 
 
 
 
-    getWeatherData(double latitude,double longitude,Context context,Handler handler){
+    getWeatherData(double latitude,double longitude,Context context,Handler handler,Handler handler3){
+        this.handler3 = handler3;
         this.latitude = latitude;
         this.longitude = longitude;
         this.context = context;
@@ -78,6 +81,8 @@ public class getWeatherData  implements Runnable{
                             String[] discription = new String[7];
                             if (jsonArray.length() == 0){
                                 Toast.makeText(context,"query not found !",Toast.LENGTH_LONG).show();
+                                Message message = new Message();
+                                handler3.sendMessage(message);
                             }
                             for (int i = 0; i < 7 ; i++) {
                                 JSONObject c = jsonArray.getJSONObject(i);
@@ -150,6 +155,8 @@ public class getWeatherData  implements Runnable{
                         }
                         catch (JSONException E){
                             Toast.makeText(context,"Couldn't get json from server." ,Toast.LENGTH_LONG).show();
+                            Message message = new Message();
+                            handler3.sendMessage(message);
                             E.printStackTrace();
                         }
                     }
@@ -157,6 +164,10 @@ public class getWeatherData  implements Runnable{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "cannot find information !\ncheck your connection:)",Toast.LENGTH_LONG).show();
+                Message message = new Message();
+                handler3.sendMessage(message);
+//                String statusCode = new String(error.networkResponse.data);
+//                System.out.println("Codigo " + statusCode);
             }
         });
         queue.add(jsonObjectRequest);

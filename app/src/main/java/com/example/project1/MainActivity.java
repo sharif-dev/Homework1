@@ -134,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if ( !isConnected ){
+            Toast.makeText(this,"Not connected to Internet",Toast.LENGTH_LONG).show();
             new Thread(new ReadAndDisplayLastData(this,showLastData)).start();
-
         }
         System.out.println("net :" + isConnected);
 

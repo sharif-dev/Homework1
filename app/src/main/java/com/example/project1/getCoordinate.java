@@ -111,8 +111,8 @@ public class getCoordinate implements Runnable {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, error.getMessage(),Toast.LENGTH_LONG).show();
-
+                Toast.makeText(context, "cannot find information !\ncheck your connection:)",Toast.LENGTH_LONG).show();
+                
             }
         });
 

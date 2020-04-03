@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class getWeatherData  implements Runnable{
@@ -67,7 +68,7 @@ public class getWeatherData  implements Runnable{
 
                             JSONObject jsonObject = response.getJSONObject("daily");
 //                            System.out.println(jsonObject.toString(4));
-
+//                            jsonObject.getString("error");
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
 
                             String[] icon = new String[7];
@@ -155,8 +156,7 @@ public class getWeatherData  implements Runnable{
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(),Toast.LENGTH_LONG).show();
-//                System.out.println("No response");
+                Toast.makeText(context, "cannot find information !\ncheck your connection:)",Toast.LENGTH_LONG).show();
             }
         });
         queue.add(jsonObjectRequest);

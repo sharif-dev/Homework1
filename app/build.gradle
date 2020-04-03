@@ -6,12 +6,21 @@ android {
 
     defaultConfig {
         applicationId "com.example.project1"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    repositories {
+        mavenCentral()
+        maven{
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+        dependencies {
+            implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+        }
     }
 
     buildTypes {

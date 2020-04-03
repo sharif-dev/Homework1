@@ -4,6 +4,7 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -17,6 +18,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class getWeatherData  implements Runnable{
@@ -51,8 +56,14 @@ public class getWeatherData  implements Runnable{
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            String text ="";
-                            System.out.println(response.toString(4));
+                            try {
+                                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
+                                outputStreamWriter.write(response.toString());
+                                outputStreamWriter.close();
+                            }
+                            catch (IOException e) {
+                                Log.e("Exception", "File write failed: " + e.toString());
+                            }
 
                             JSONObject jsonObject = response.getJSONObject("daily");
 //                            System.out.println(jsonObject.toString(4));
@@ -82,18 +93,7 @@ public class getWeatherData  implements Runnable{
 
                             }
                             Integer[] imgid=new Integer[7];
-//                            String[] icons = {
-//                                    "clear-day",
-//                                    "clear-night",
-//                                    "partly-cloudy-day",
-//                                    "partly-cloudy-night",
-//                                    "cloudy",
-//                                    "rain",
-//                                    "sleet",
-//                                    "snow",
-//                                    "wind",
-//                                    "fog"
-//                            };
+
                             for(int i = 0 ; i <7 ; i ++){
                                 switch (icon[i]){
                                     case ("clear-day"):

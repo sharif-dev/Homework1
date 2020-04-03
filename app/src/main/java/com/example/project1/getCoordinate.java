@@ -63,8 +63,6 @@ public class getCoordinate implements Runnable {
                         String jsonStr = response;
                         if (jsonStr != null) {
                             try {
-                                System.out.println("hiii");
-                                Log.i("1","gui");
                                 JSONObject jsonObj = new JSONObject(jsonStr);
                                 // Getting JSON Array node
                                 JSONArray contacts = jsonObj.getJSONArray("features");

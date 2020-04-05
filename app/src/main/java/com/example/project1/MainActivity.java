@@ -1,6 +1,7 @@
 package com.example.project1;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -78,9 +80,12 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Context context = MainActivity.this;
                 String cityNameStr = cityName.getText().toString();
                 new Thread(new getCoordinate(cityNameStr, MainActivity.this, coordinates, handler, coordinateHandler,queryDone)).start();
                 progressBar.setVisibility(View.VISIBLE);
+                InputMethodManager imm = (InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(cityName.getWindowToken(), 0);
             }
 
         });

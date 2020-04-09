@@ -45,6 +45,13 @@ public class getWeatherData  implements Runnable{
     }
     @Override
     public void run() {
+
+        try{
+        Thread.sleep(2500);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         String secretKey = "b76283c6897558702b987cbb96599c59";
         String url ="https://api.darksky.net/forecast/"+secretKey+"/"+latitude+","+longitude;
         System.out.println("url : "+url);
@@ -60,6 +67,7 @@ public class getWeatherData  implements Runnable{
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+
                             try {
                                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
                                 outputStreamWriter.write(response.toString());
